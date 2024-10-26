@@ -3,11 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/flowerFragment2">
+    app:startDestination="@id/flowerFragment">
 
     <fragment
-        android:id="@+id/flowerFragment2"
+        android:id="@+id/flowerFragment"
         android:name="com.example.flowerdex.FlowerFragment"
         android:label="fragment_flower"
-        tools:layout="@layout/fragment_flower" />
+        tools:layout="@layout/fragment_flower" >
+        <action
+            android:id="@+id/action_flowerFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_flowerFragment_to_flowerProfileFragment"
+            app:destination="@id/flowerProfileFragment" />
+        <action
+            android:id="@+id/action_flowerFragment_to_yourFlowersFragment"
+            app:destination="@id/yourFlowersFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/flowerProfileFragment"
+        android:name="com.example.flowerdex.FlowerProfileFragment"
+        android:label="fragment_flower_profile"
+        tools:layout="@layout/fragment_flower_profile" >
+        <action
+            android:id="@+id/action_flowerProfileFragment_to_flowerFragment"
+            app:destination="@id/flowerFragment" />
+        <action
+            android:id="@+id/action_flowerProfileFragment_to_yourFlowersFragment"
+            app:destination="@id/yourFlowersFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.flowerdex.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_flowerFragment"
+            app:destination="@id/flowerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourFlowersFragment"
+        android:name="com.example.flowerdex.YourFlowersFragment"
+        android:label="fragment_your_flowers"
+        tools:layout="@layout/fragment_your_flowers" >
+        <action
+            android:id="@+id/action_yourFlowersFragment_to_flowerFragment"
+            app:destination="@id/flowerFragment" />
+        <action
+            android:id="@+id/action_yourFlowersFragment_to_flowerProfileFragment"
+            app:destination="@id/flowerProfileFragment" />
+    </fragment>
+
 </navigation>
