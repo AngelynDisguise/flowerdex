@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/flowerFragment"
         android:name="com.example.flowerdex.FlowerFragment"
-        android:label="fragment_flower"
+        android:label="FlowerDex"
         tools:layout="@layout/fragment_flower" >
         <action
             android:id="@+id/action_flowerFragment_to_settingsFragment"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/flowerProfileFragment"
         android:name="com.example.flowerdex.FlowerProfileFragment"
-        android:label="fragment_flower_profile"
+        android:label="Flower Profile"
         tools:layout="@layout/fragment_flower_profile" >
         <action
             android:id="@+id/action_flowerProfileFragment_to_flowerFragment"
@@ -37,7 +37,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.flowerdex.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_flowerFragment"
