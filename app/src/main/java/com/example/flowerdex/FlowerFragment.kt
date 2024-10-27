@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -45,9 +46,12 @@ class FlowerFragment : Fragment() {
             FlowerItem(8, "Flower8", R.drawable.rose),
         )
 
-        adapter.submitList(flowerList)
+        adapter.submitList(flowerList) // Send list to list adapter
 
-
+        adapter.setOnClickListener { _, flowerItem ->
+            val flowerBundle = Bundle().apply { putParcelable("flower", flowerItem) }
+            findNavController().navigate(R.id.flowerProfileFragment, flowerBundle) // Go to flower profile
+        }
     }
 
 }

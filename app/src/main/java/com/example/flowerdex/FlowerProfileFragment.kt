@@ -1,59 +1,62 @@
 package com.example.flowerdex
 
+import FlowerItem
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.findNavController
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FlowerProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
  */
 class FlowerProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var flowerItem: FlowerItem? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_flower_profile, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FlowerProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FlowerProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Get Flower from bundle sent by FlowerFragment
+        @Suppress("DEPRECATION")
+        flowerItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("flower", FlowerItem::class.java)
+        } else {
+            arguments?.getParcelable("flower")
+        }
+
+        flowerItem?. let {
+            Log.i("FlowerProfileFragment", "Flower profile received a flower: $it")
+        } ?: Log.e("FlowerProfileFragment", "Flower profile received no flower :(\n arguments = $arguments")
+
+        // Go back to Flowers Menu (FlowerFragment)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
             }
+        })
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Change toolbar title to the selected flower name
+        flowerItem?.let {
+            Log.i("FlowerProfileFragment", "Set toolbar name to ${it.name}")
+            (requireActivity() as MainActivity).setActionBarTitle(it.name)
+        } ?: Log.e("FlowerProfileFragment", "Toolbar was not set in onResume.")
+
+    }
+
 }
