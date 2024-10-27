@@ -9,21 +9,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.flowerdex.flowerProfileTabs.AboutFlowerFragment
 import com.example.flowerdex.flowerProfileTabs.FlowerEcologyFragment
+import com.example.flowerdex.flowerProfileTabs.FlowerProfileViewModel
 import com.example.flowerdex.flowerProfileTabs.HowToGrowFlowerFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
- * A simple [Fragment] subclass.
+ * A [Fragment] page opened when you click on a specific flower card from [FlowerFragment].
+ * Receives a [FlowerItem] bundle as an argument, and distributes the data to child fragment pages,
+ * [AboutFlowerFragment], [HowToGrowFlowerFragment], and [FlowerEcologyFragment],
+ * via a ViewModel [FlowerProfileViewModel].
+ * (Note: I use "pages" and "child fragments" interchangeably sometimes.)
  */
 class FlowerProfileFragment : Fragment() {
 
     private var flowerItem: FlowerItem? = null  // the flower data for all pages
+    private val viewModel: FlowerProfileViewModel by viewModels()  // the ViewModel to expose flower data to all pages
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +52,10 @@ class FlowerProfileFragment : Fragment() {
 
         flowerItem?. let {
             Log.i("FlowerProfileFragment", "Flower profile received a flower: $it\n")
-            // If all goes well, do logic stuff with the FlowerItem data here...
+            viewModel.setFlowerItem(it)
+
+            // If all goes well, do other logic stuff with the FlowerItem data here...
+
         } ?: Log.e("FlowerProfileFragment", "Flower profile received no flower :(\n arguments = $arguments")
 
         /* Setup tabs and horizontal paging with child fragments (i.e. About, HowToGrow, Ecology) */
@@ -54,7 +64,8 @@ class FlowerProfileFragment : Fragment() {
         val tabLayout: TabLayout = view.findViewById(R.id.flower_profile_tab_layout)
 
         viewPager.adapter = pagerAdapter // attach the adapter to the ViewPager2
-        // Link TabLayout and ViewPager2 together - tabs will synchronize with pager position
+
+        /* Link TabLayout and ViewPager2 together - tabs will synchronize with pager position */
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "About"
@@ -84,11 +95,13 @@ class FlowerProfileFragment : Fragment() {
     }
 }
 
-/*
-* This pager adapter generates the pages (i.e. the fragments) that the ViewPager2 shows.
-*
-* Sidenote: The original ViewPager and FragmentPagerAdapter/FragmentStatePagerAdapter adapter are deprecated,
-* so we use ViewPager2 and FragmentStateAdapter instead.
+/**
+ * This pager adapter generates the pages (i.e. the fragments) that the ViewPager2 shows.
+ * Each fragment created represents a page.
+ * @param fragment where the ViewPager2 lives
+ *
+ * (Sidenote: The original ViewPager and FragmentPagerAdapter/FragmentStatePagerAdapter adapter are deprecated,
+ * so we use ViewPager2 and FragmentStateAdapter instead.)
 * */
 class FlowerProfilePagerAdapter(
     fragment: Fragment
